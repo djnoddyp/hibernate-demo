@@ -3,10 +3,11 @@ package demo.entities;
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity
+@Entity(name = "BikeShop")
 public class BikeShop {
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
     private String address;

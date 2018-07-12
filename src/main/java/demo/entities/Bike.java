@@ -1,17 +1,16 @@
 package demo.entities;
 
 import demo.enums.Style;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "Bike")
 public class Bike {
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @NaturalId
     @Embedded
     private BikeName bikeName;
 
