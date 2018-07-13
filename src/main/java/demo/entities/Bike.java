@@ -1,6 +1,7 @@
 package demo.entities;
 
 import demo.enums.Style;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 
@@ -14,13 +15,20 @@ public class Bike {
     @Embedded
     private BikeName bikeName;
 
+    @Column(nullable = false, unique = true)
     private Integer gears;
 
     @Enumerated
     private Style style;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "bikeShop_id")
     private BikeShop bikeShop;
+    
+    private Double price;
+    
+    @Formula("price * 1.31")
+    private Double priceInDollars;
 
     public Bike(BikeName bikeName, Integer gears, Style style) {
         this.bikeName = bikeName;
@@ -69,5 +77,21 @@ public class Bike {
 
     public void setBikeShop(BikeShop bikeShop) {
         this.bikeShop = bikeShop;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getPriceInDollars() {
+        return priceInDollars;
+    }
+
+    public void setPriceInDollars(Double priceInDollars) {
+        this.priceInDollars = priceInDollars;
     }
 }
