@@ -1,33 +1,22 @@
 package demo.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity(name = "BikeShop")
-public class BikeShop {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+public class BikeShop extends BaseEntity {
 
     private String address;
 
     // Bi-directional mapping, defined on child side
     @OneToMany(mappedBy = "bikeShop", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Bike> bikes;
+    private Set<Bike> bikes = new HashSet<>();
 
     // Bi-directional mapping, defined on child side
     @OneToMany(mappedBy = "bikeShop", cascade = CascadeType.ALL)
-    private Set<Employee> employees;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private Set<Employee> employees = new HashSet<>();
 
     public String getAddress() {
         return address;

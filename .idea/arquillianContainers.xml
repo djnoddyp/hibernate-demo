@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArquillianContainersManager">
+    <container containerId="container.arquillian.managed.wildFly" name="WildFly Managed">
+      <maven-library groupId="org.wildfly.arquillian" artifactId="wildfly-arquillian-container-managed" version="RELEASE" />
+      <env-variables>
+        <map>
+          <entry key="JBOSS_HOME" value="$PROJECT_DIR$/../../wildfly-12.0.0.Final" />
+        </map>
+      </env-variables>
+    </container>
+  </component>
+</project>

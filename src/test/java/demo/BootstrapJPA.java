@@ -6,9 +6,9 @@ import org.junit.Before;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
-public class BootstrapJPATest {
+public class BootstrapJPA {
 
-    static EntityManager em;
+    EntityManager em;
 
     @Before
     public void init() {
@@ -17,7 +17,6 @@ public class BootstrapJPATest {
 
     @After
     public void tearDown() {
-        em.clear();
         em.close();
     }
 

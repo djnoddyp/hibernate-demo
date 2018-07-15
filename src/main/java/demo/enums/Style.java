@@ -4,6 +4,6 @@ public enum Style {
 
     ROAD,
     MOUNTAIN,
-    HYBRID;
+    HYBRID
 
 }

@@ -6,11 +6,7 @@ import org.hibernate.annotations.Formula;
 import javax.persistence.*;
 
 @Entity(name = "Bike")
-public class Bike {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+public class Bike extends BaseEntity {
 
     @Embedded
     private BikeName bikeName;
@@ -37,14 +33,6 @@ public class Bike {
     }
 
     public Bike() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public BikeName getBikeName() {

@@ -11,46 +11,43 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FetchingStrategiesTest extends BootstrapJPATest {
+/**
+ * Uses resource-local application managed EntityManager, for JTA container managed see InContainerTest.java
+ */
+public class FetchingStrategiesTest extends BootstrapJPA {
 
     @Test
     public void testEagerFetching() {
-        BikeShop b = new BikeShop();
-        Set<Bike> bikes = new HashSet<>();
+        BikeShop bikeShop = new BikeShop();
         for (int i = 0; i < 10; i++) {
             Bike bike = new Bike();
             bike.setGears(i);
-            bike.setBikeShop(b);
-            bikes.add(bike);
+            bikeShop.addBike(bike);
         }
-        b.setBikes(bikes);
         em.getTransaction().begin();
-        em.persist(b);
+        em.persist(bikeShop);
         em.getTransaction().commit();
         em.clear();
-        BikeShop b2 = em.find(BikeShop.class, 1);
-        em.detach(b2);
-        assertNotNull(b2.getBikes());
+        BikeShop b = em.find(BikeShop.class, Long.valueOf(1L));
+        em.detach(b);
+        assertNotNull(b.getBikes());
     }
 
     @Test(expected = LazyInitializationException.class)
     public void testLazyFetching() {
-        BikeShop b = new BikeShop();
-        Set<Employee> employees = new HashSet<>();
+        BikeShop bikeShop = new BikeShop();
         for (int i = 0; i < 10; i++) {
             Employee e = new Employee();
-            e.setBikeShop(b);
             e.setEmployeeNumber(i);
-            employees.add(e);
+            bikeShop.addEmployee(e);
         }
-        b.setEmployees(employees);
         em.getTransaction().begin();
-        em.persist(b);
+        em.persist(bikeShop);
         em.getTransaction().commit();
         em.clear();
-        BikeShop b2 = em.find(BikeShop.class, 1);
-        em.detach(b2);
-        System.out.println(b2.getEmployees());
+        BikeShop b = em.find(BikeShop.class, Long.valueOf(1L));
+        em.detach(b);
+        System.out.println(b.getEmployees());
     }
 
 }
