@@ -51,11 +51,6 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.2</version>
         </dependency>
-        <dependency>
-            <groupId>net.ttddyy</groupId>
-            <artifactId>datasource-proxy</artifactId>
-            <version>1.4.9</version>
-        </dependency>
 
         <!-- arquillian -->
         <dependency>

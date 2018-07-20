@@ -11,7 +11,6 @@ public class Bike extends BaseEntity {
     @Embedded
     private BikeName bikeName;
 
-    @Column(nullable = false, unique = true)
     private Integer gears;
 
     @Enumerated

@@ -8,6 +8,7 @@ import java.util.Set;
 @Entity(name = "BikeShop")
 public class BikeShop extends BaseEntity {
 
+    @Column(unique = true)
     private String address;
 
     // Bi-directional mapping, defined on child side
@@ -17,6 +18,13 @@ public class BikeShop extends BaseEntity {
     // Bi-directional mapping, defined on child side
     @OneToMany(mappedBy = "bikeShop", cascade = CascadeType.ALL)
     private Set<Employee> employees = new HashSet<>();
+
+    public BikeShop(String address) {
+        this.address = address;
+    }
+
+    public BikeShop() {
+    }
 
     public String getAddress() {
         return address;

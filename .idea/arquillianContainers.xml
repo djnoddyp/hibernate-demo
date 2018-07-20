@@ -5,7 +5,7 @@
       <maven-library groupId="org.wildfly.arquillian" artifactId="wildfly-arquillian-container-managed" version="RELEASE" />
       <env-variables>
         <map>
-          <entry key="JBOSS_HOME" value="$PROJECT_DIR$/../../wildfly-12.0.0.Final" />
+          <entry key="JBOSS_HOME" value="C:\Users\PNodder\dev\demo\wildfly-13.0.0.Final" />
         </map>
       </env-variables>
     </container>

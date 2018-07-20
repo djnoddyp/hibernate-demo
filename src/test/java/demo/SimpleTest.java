@@ -6,6 +6,7 @@ import demo.entities.BikeName;
 import demo.entities.BikeShop;
 import demo.enums.Style;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.persistence.RollbackException;
@@ -31,7 +32,7 @@ public class SimpleTest extends BootstrapJPA {
         em.persist(bikeShop);
         em.getTransaction().commit();
 
-        assertSame(3, em.createQuery(QueryConstants.BIKE_BIKESHOP)
+        assertEquals(3, em.createQuery(QueryConstants.BIKE_BIKESHOP)
                 .setParameter("bikeShop", bikeShop).getResultList().size());
     }
 
@@ -91,7 +92,7 @@ public class SimpleTest extends BootstrapJPA {
     public void testUniqueConstraint() {
         em.getTransaction().begin();
         for (int i = 0; i < 2; i++) {
-            em.persist(new Bike(new BikeName("Giant", "Talon"), 18, Style.MOUNTAIN));
+            em.persist(new BikeShop("10 Belfast Road"));
         }
         em.getTransaction().commit();
     }
