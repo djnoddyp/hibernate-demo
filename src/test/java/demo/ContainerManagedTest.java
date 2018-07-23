@@ -1,6 +1,7 @@
 package demo;
 
 import demo.constants.QueryConstants;
+import demo.dtos.BikeShopDTO;
 import demo.entities.Bike;
 import demo.entities.BikeName;
 import demo.entities.BikeShop;
@@ -18,19 +19,17 @@ import org.junit.runner.RunWith;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 /**
- * Uses JTA container managed EntityManager
+ * Uses JTA container managed EntityManager. See test-persistence.xml
+ * for JPA configuration.
  */
 @RunWith(Arquillian.class)
 @Transactional
-public class InContainerTest {
+public class ContainerManagedTest {
 
     // Inject a JTA container managed EntityManager
     @PersistenceContext(unitName = "ARQTEST")
@@ -40,16 +39,18 @@ public class InContainerTest {
     public static WebArchive createDeployment() {
         WebArchive war = ShrinkWrap.create(WebArchive.class)
                 .addPackage(BikeShop.class.getPackage())
-                .addClass(Style.class)
+                .addPackage("demo.dtos")
+                .addPackage("demo.enums")
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         System.out.println(war.toString(true));
         return war;
     }
 
+
     /**
      * Simple test to demonstrate the difference between an application-managed
-     * EntityManager (a la SimpleTest.java) and a JTA one
+     * EntityManager (a la ApplicationManagedTest.java) and a JTA one
      * Note: JTA cannot use entityManager#getTransaction since container is managing the transactions
      */
     @Test
@@ -105,7 +106,7 @@ public class InContainerTest {
      * 
      * 1. Change to EAGER (bad)
      * 2. Use a JOIN FETCH to load the collection when it is needed (good)
-     * 3. See https://vladmihalcea.com/the-best-way-to-handle-the-lazyinitializationexception/
+     * 3. Others, see https://vladmihalcea.com/the-best-way-to-handle-the-lazyinitializationexception/
      */
     @Test
     public void testJoinFetchToTheRescue() {
@@ -134,16 +135,70 @@ public class InContainerTest {
         em.detach(bs);
         assertEquals(3, bs.getBikes().size());
     }
-    
-    
+
+    /**
+     * Entity can be projected onto a DTO, thereby selecting only as many
+     * columns as are needed to fulfil a business use case.
+     */
+    @Test
+    public void testDtoProjectionToTheRescue() {
+        BikeShop bikeShop = createBikeShop();
+        bikeShop.setAddress("10 Ladas Drive");
+        em.persist(bikeShop);
+        BikeShopDTO dto = em.createQuery(QueryConstants.BIKESHOP_DTO, BikeShopDTO.class)
+                .setParameter("id", bikeShop.getId()).getSingleResult();
+        assertEquals("10 Ladas Drive", dto.getAddress());
+    }
+
+    /**
+     * See test-persistence.xml, will batch the INSERT statements into
+     * batches of 10. Nothing to see in console but if using JDBC spy there
+     * will be 5 PreparedStatement's.
+     */
+    @Test
+    public void testBatching() {
+        int entityCount = 50;
+        for (int i = 0; i < entityCount; i++) {
+            em.persist(new Employee());
+        }
+    }
+
+    /**
+     * Hibernate can execute native SQL e.g. a window function.
+     * This one returns the following result:
+     *
+     *  bikeshop_id |  make   |   model   | style | price  |   sum
+     * -------------+---------+-----------+-------+--------+---------
+     *            1 | GT      | Avalanche |     2 | 499.29 |  499.29
+     *            1 | Giant   | Trance    |     1 | 900.95 | 1400.24
+     *            1 | S-Works | Comp      |     0 |   1200 | 2600.24
+     *            8 | GT      | Avalanche |     2 | 499.29 |  499.29
+     *            8 | Giant   | Trance    |     1 | 900.95 | 1400.24
+     *            8 | S-Works | Comp      |     0 |   1200 | 2600.24
+     */
+    @Test
+    public void testNativeQuery() {
+        BikeShop bs = createBikeShop();
+        em.persist(bs);
+        BikeShop bs2 = createBikeShop();
+        em.persist(bs2);
+        em.flush();
+        em.clear();
+        List<Object[]> bikes = em.createNativeQuery(QueryConstants.BIKESHOP_NATIVE).getResultList();
+        Object[] bike = bikes.get(2);
+        assertEquals(Double.valueOf(2600.24), bike[5]);
+    }
     
     
     
     BikeShop createBikeShop() {
         BikeShop bikeShop = new BikeShop();
         Bike bike1 = new Bike(new BikeName("Giant", "Trance"), 18, Style.MOUNTAIN);
-        Bike bike2 = new Bike(new BikeName("GT", "Avalanche"), 21, Style.MOUNTAIN);
+        Bike bike2 = new Bike(new BikeName("GT", "Avalanche"), 21, Style.HYBRID);
         Bike bike3 = new Bike(new BikeName("S-Works", "Comp"), 10, Style.ROAD);
+        bike1.setPrice(900.95);
+        bike2.setPrice(499.29);
+        bike3.setPrice(1200.00);
         bikeShop.addBike(bike1);
         bikeShop.addBike(bike2);
         bikeShop.addBike(bike3);

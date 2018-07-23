@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Uses resource-local application managed EntityManager, for JTA container managed see InContainerTest.java
+ * Uses resource-local application managed EntityManager, for JTA container managed see ContainerManagedTest.java
  */
 public class FetchingStrategiesTest extends BootstrapJPA {
 

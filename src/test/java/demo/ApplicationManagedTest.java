@@ -4,9 +4,9 @@ import demo.constants.QueryConstants;
 import demo.entities.Bike;
 import demo.entities.BikeName;
 import demo.entities.BikeShop;
+import demo.entities.Employee;
 import demo.enums.Style;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.persistence.RollbackException;
@@ -14,9 +14,9 @@ import javax.persistence.RollbackException;
 import static org.junit.Assert.*;
 
 /**
- * Uses resource-local application managed EntityManager, for JTA container managed see InContainerTest.java
+ * Uses resource-local application managed EntityManager, for JTA container managed see ContainerManagedTest.java
  */
-public class SimpleTest extends BootstrapJPA {
+public class ApplicationManagedTest extends BootstrapJPA {
 
     @Test
     public void testSimplePersist() {
