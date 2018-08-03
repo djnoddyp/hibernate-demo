@@ -56,7 +56,7 @@ public class ContainerManagedTest {
     @Test
     public void testSimplePersist() {
         BikeShop bikeShop = createBikeShop();
-        // A JTA EntityManager cannot use getTransaction()!!
+        // A JTA EntityManager cannot use getTransaction()
         //em.getTransaction().begin();
         em.persist(bikeShop);
         //em.getTransaction().commit();
