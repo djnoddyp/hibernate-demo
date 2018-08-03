@@ -1,3 +1,9 @@
+Requirements:
+
+1. Postgresql database
+2. Wildfly 13 (if running ContainerManagedTest.java) with a postgres datasource configured, see below
+
+
 run docker postgres:
 docker run -d -p 5432:5432 --name hibernate-demo postgres
 

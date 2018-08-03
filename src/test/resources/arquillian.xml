@@ -7,6 +7,7 @@
     <container qualifier="wildfly" default="true">
         <configuration>
             <property name="serverConfig">standalone-full.xml</property>
+            <property name="javaVmArguments">-Xms64m -Xmx512m -Dhibernate.generate_statistics=true</property>
             <!-- for debugging tests -->
             <!--<property name="javaVmArguments">-agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=y</property>-->
         </configuration>

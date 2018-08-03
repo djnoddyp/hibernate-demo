@@ -56,7 +56,7 @@ public class ContainerManagedTest {
     @Test
     public void testSimplePersist() {
         BikeShop bikeShop = createBikeShop();
-        // A JTA EntityManager cannot use getTransaction()
+        // A JTA EntityManager cannot use getTransaction()!!
         //em.getTransaction().begin();
         em.persist(bikeShop);
         //em.getTransaction().commit();
@@ -125,7 +125,7 @@ public class ContainerManagedTest {
      * become detached.
      */
     @Test
-    public void testNoLazyInitializationException() {
+    public void testEagerFetching() {
         BikeShop bikeShop = createBikeShop();
         em.persist(bikeShop);
         em.flush();
@@ -151,9 +151,11 @@ public class ContainerManagedTest {
     }
 
     /**
-     * See test-persistence.xml, will batch the INSERT statements into
-     * batches of 10. Nothing to see in console but if using JDBC spy there
-     * will be 5 PreparedStatement's.
+     * See test-persistence.xml, will batch the INSERT statements into batches
+     * of max 10. See statistics in console- 5 JDBC batches should be executed.
+     * 
+     * Note: Only inserts/updates etc. into the same table will be batched,
+     * see AbstractEntityPersister.java in Hibernate
      */
     @Test
     public void testBatching() {
