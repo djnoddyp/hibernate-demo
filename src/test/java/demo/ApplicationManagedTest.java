@@ -4,7 +4,6 @@ import demo.constants.QueryConstants;
 import demo.entities.Bike;
 import demo.entities.BikeName;
 import demo.entities.BikeShop;
-import demo.entities.Employee;
 import demo.enums.Style;
 
 import org.junit.Test;
@@ -43,13 +42,13 @@ public class ApplicationManagedTest extends BootstrapJPA {
         em.persist(bike1);
         // Entity is now managed
         assertEquals(Style.MOUNTAIN, em.createQuery(QueryConstants.BIKE_STYLE_MODEL)
-                .setParameter("model", "Trance").getResultStream().findFirst().get());
-        
+                .setParameter("model", "Trance").getResultList().get(0));
+
         // Update entity
         bike1.setStyle(Style.ROAD);
         em.getTransaction().commit();
         assertEquals(Style.ROAD, em.createQuery(QueryConstants.BIKE_STYLE_MODEL)
-                .setParameter("model", "Trance").getResultStream().findFirst().get());
+                .setParameter("model", "Trance").getResultList().get(0));
     }
 
     @Test
@@ -59,23 +58,23 @@ public class ApplicationManagedTest extends BootstrapJPA {
         em.persist(bike1);
         // Entity is now managed
         assertEquals(Style.MOUNTAIN, em.createQuery(QueryConstants.BIKE_STYLE_MODEL)
-                .setParameter("model", "Trance").getResultStream().findFirst().get());
-        
+                .setParameter("model", "Trance").getResultList().get(0));
+
         // Clear the Persistence context (first level cache)
         em.clear();
         // Update (no longer managed) entity
         bike1.setStyle(Style.ROAD);
         // Assert that changes were not propagated
         assertNotEquals(Style.ROAD, em.createQuery(QueryConstants.BIKE_STYLE_MODEL)
-                .setParameter("model", "Trance").getResultStream().findFirst().get());
-        
+                .setParameter("model", "Trance").getResultList().get(0));
+
         // Re-attach entity
         em.merge(bike1);
         em.getTransaction().commit();
         assertEquals(Style.ROAD, em.createQuery(QueryConstants.BIKE_STYLE_MODEL)
-                .setParameter("model", "Trance").getResultStream().findFirst().get());
+                .setParameter("model", "Trance").getResultList().get(0));
     }    
-    
+
     @Test
     public void testHibernateFormula() {
         Bike bike1 = new Bike(new BikeName("Giant", "Talon"), 18, Style.MOUNTAIN);
@@ -85,9 +84,9 @@ public class ApplicationManagedTest extends BootstrapJPA {
         em.persist(bike1);
         em.getTransaction().commit();
         assertEquals(price * 1.31, em.createQuery(QueryConstants.BIKE_PRICEINDOLLARS_MODEL)
-                .setParameter("model", "Talon").getResultStream().findFirst().get());
+                .setParameter("model", "Talon").getResultList().get(0));
     }
-    
+
     @Test(expected = RollbackException.class)
     public void testUniqueConstraint() {
         em.getTransaction().begin();
@@ -96,6 +95,6 @@ public class ApplicationManagedTest extends BootstrapJPA {
         }
         em.getTransaction().commit();
     }
-    
-    
+
+
 }

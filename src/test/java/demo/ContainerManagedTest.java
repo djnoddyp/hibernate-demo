@@ -125,7 +125,7 @@ public class ContainerManagedTest {
      * become detached.
      */
     @Test
-    public void testNoLazyInitializationException() {
+    public void testEagerFetching() {
         BikeShop bikeShop = createBikeShop();
         em.persist(bikeShop);
         em.flush();
@@ -154,6 +154,9 @@ public class ContainerManagedTest {
      * See test-persistence.xml, will batch the INSERT statements into
      * batches of 10. Nothing to see in console but if using JDBC spy there
      * will be 5 PreparedStatement's.
+     * 
+     * Note: Only inserts/updates etc. into the same table will be batched,
+     * see AbstractEntityPersister.java in Hibernate
      */
     @Test
     public void testBatching() {
