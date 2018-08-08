@@ -1,10 +1,8 @@
-Set of unit tests demonstrating JPA/Hibernate features in an application-managed environment and also a container-
-managed environment (using Arquillian and Wildfly).
+Set of unit tests demonstrating jOOQ features.
 
-Requirements:
-
-1. Postgresql database
-2. Wildfly 13 (if running ContainerManagedTest.java) with a postgres datasource configured, see below
+1. Connect to postgres and create database jooq_demo, connect to db and execute DDL in create-tables.sql
+2. Run org.jooq.codegen.GenerationTool.java to generate table classes.
+3. Run tests in JooqTest.java
 
 
 run docker postgres:
@@ -20,24 +18,3 @@ connect to postgres cli (password = postgres):
 psql -d postgres -U postgres -W
 
 http://www.postgresqltutorial.com/psql-commands/
-
-
-ARQUILLIAN:
-
-need to add following datasource, use standalone-full.xml:
-
-    <datasource jta="true" jndi-name="java:jboss/datasources/PostgresDS" pool-name="PostgresDS" enabled="true" use-ccm="false">
-        <connection-url>jdbc:postgresql://localhost:5432/postgres</connection-url>
-        <driver-class>org.postgresql.Driver</driver-class>
-        <driver>postgresql-42.2.2.jar</driver>
-        <security>
-            <user-name>postgres</user-name>
-            <password>postgres</password>
-        </security>
-        <validation>
-            <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChec$
-            <background-validation>true</background-validation>
-            <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"/>
-        </validation>
-    </datasource>
-
