@@ -1,3 +1,6 @@
+Set of unit tests demonstrating JPA/Hibernate features in an application-managed environment and also a container-
+managed environment (using Arquillian and Wildfly).
+
 Requirements:
 
 1. Postgresql database
